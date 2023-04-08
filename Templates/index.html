@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Recommendation App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Food Recommendation App</h1>
+    <form id="get-recommendations-form">
+        
+        
+        <!-- Cuisine -->
+<label for="cuisine">Cuisine:</label>
+<br>
+<input type="checkbox" name="cuisine" value="North Indian" onclick="manageSingleSelection('cuisine', 'North Indian')">North Indian
+<input type="checkbox" name="cuisine" value="South Indian" onclick="manageSingleSelection('cuisine', 'South Indian')">South Indian
+<input type="checkbox" name="cuisine" value="American" onclick="manageSingleSelection('cuisine', 'American')">American
+<input type="checkbox" name="cuisine" value="Chinese" onclick="manageSingleSelection('cuisine', 'Chinese')">Chinese
+<input type="checkbox" name="cuisine" value="Italian" onclick="manageSingleSelection('cuisine', 'Italian')">Italian
+<input type="checkbox" name="cuisine" value="Japanese" onclick="manageSingleSelection('cuisine', 'Japanese')">Japanese
+<input type="checkbox" name="cuisine" value="South Korean" onclick="manageSingleSelection('cuisine', 'South Korean')">South Korean
+<br><br>
+
+<!-- Dietary Preferences -->
+<label for="dietary_preference">Dietary Preferences:</label>
+<br>
+<input type="radio" name="dietary_preference" value="Vegetarian">Vegetarian
+<input type="radio" name="dietary_preference" value="Non-vegetarian">Non-vegetarian
+<br><br>
+
+<!-- Allergens -->
+<label for="allergens[]">Allergens:</label>
+<br>
+<input type="checkbox" name="allergens[]" value="Dairy" onclick="manageSingleSelection('allergens', 'Dairy')">Dairy
+<input type="checkbox" name="allergens[]" value="Nuts" onclick="manageSingleSelection('allergens', 'Nuts')">Nuts
+<input type="checkbox" name="allergens[]" value="Gluten" onclick="manageSingleSelection('allergens', 'Gluten')">Gluten
+<input type="checkbox" name="allergens[]" value="Shellfish" onclick="manageSingleSelection('allergens', 'Shellfish')">Shellfish
+<input type="checkbox" name="allergens[]" value="None" onclick="manageSingleSelection('allergens', 'None')">None
+<br><br>
+
+<!-- Health Quotient -->
+<label for="health_quotient">Health Quotient:</label>
+<br>
+<input type="radio" name="health_quotient" value="High">High
+<input type="radio" name="health_quotient" value="Low">Low
+<input type="radio" name="health_quotient" value="Don't care">Don't care
+<br><br>
+
+<!-- Spiciness -->
+<label for="spiciness">Spiciness:</label>
+<br>
+<input type="radio" name="spiciness" value="Non-spicy">Non-spicy
+<input type="radio" name="spiciness" value="Mild">Mild
+<input type="radio" name="spiciness" value="Very Spicy">Very Spicy
+<br><br>
+
+<!-- Course -->
+<label for="course">Course:</label>
+<br>
+<input type="radio" name="course" value="Appetizers">Appetizers
+<input type="radio" name="course" value="Main">Main
+<input type="radio" name="course" value="Side Dishes">Side Dishes
+<input type="radio" name="course" value="Desserts">Desserts
+<br><br>
+
+<!-- Cooking Method -->
+<label for="cooking_method">Cooking Method:</label>
+<br>
+<input type="radio" name="cooking_method" value="Grilling">Grilling
+<input type="radio" name="cooking_method" value="Baking">Baking
+<input type="radio" name="cooking_method" value="Frying">Frying
+<input type="radio" name="cooking_method" value="Steaming">Steaming
+<input type="radio" name="cooking_method" value="Simmering">Simmering
+<br><br>
+
+        <button type="submit">Get Recommendations</button>
+    </form>
+    <ul id="recommendations"></ul>
+    <script>
+        // Helper function to manage single selection for checkboxes
+        function manageSingleSelection(groupName, value) {
+    const checkboxes = document.querySelectorAll(`input[name="${groupName}"]`);
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.value !== value) {
+        checkbox.checked = false;
+      }
+    });
+  }
+
+  $('#get-recommendations-form').submit(function (e) {
+    e.preventDefault();
+    let formData = $(this).serialize();
+    $.post('/get_recommendations', formData, function (recommendations) {
+      displayRecommendations(recommendations);
+    }, 'json');
+  });
+
+  function displayRecommendations(recommendations) {
+  const recommendationsList = document.getElementById('recommendations');
+  recommendationsList.innerHTML = '';
+
+  recommendations.forEach(function (recommendation) {
+    const dishName = recommendation.dish_name;
+    const deliveryAppUrl = recommendation.delivery_app_url;
+    const recipeSearchUrl = recommendation.recipe_search_url;
+
+    const listItem = document.createElement('li');
+    listItem.style.display = 'flex';
+    listItem.style.justifyContent = 'space-between';
+    listItem.style.padding = '10px 0';
+    listItem.style.width = '30%'; // Add this line
+
+    const dishLink = document.createElement('a');
+    dishLink.href = deliveryAppUrl;
+    dishLink.target = '_blank';
+    dishLink.textContent = dishName;
+
+    const recipeLink = document.createElement('a');
+    recipeLink.href = recipeSearchUrl;
+    recipeLink.target = '_blank';
+    recipeLink.textContent = 'View recipe';
+
+    listItem.appendChild(dishLink);
+    listItem.appendChild(recipeLink);
+
+    recommendationsList.appendChild(listItem);
+  });
+}
+
+
+</script>
+</body>
+</html>
+
