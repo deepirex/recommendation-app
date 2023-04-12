@@ -6,6 +6,7 @@ import certifi
 from bson import json_util, ObjectId
 from json import JSONEncoder
 from urllib.parse import quote
+import os
 
 
 
@@ -16,7 +17,7 @@ class CustomJSONEncoder(JSONEncoder):
        return super(CustomJSONEncoder, self).default(obj)
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates'))
 app.json_encoder = CustomJSONEncoder
 
 
