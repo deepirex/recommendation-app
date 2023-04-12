@@ -24,7 +24,7 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
         "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
 
 
-creds = ServiceAccountCredentials.from_json_keyfile_name("/Users/Deepak/Downloads/foodra-2ce6c11940ab.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name("secrets/foodra-2ce6c11940ab.json", scope)
 client_gs = gspread.authorize(creds)
 
 
